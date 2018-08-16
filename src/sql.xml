@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<namespace>
+    <!-- 查找用户 -->
+    <select id="queryUser">
+        SELECT
+			*
+		FROM
+			users
+		WHERE
+			account = ?
+		AND `password` = ?
+    </select>
+    <!-- 将上传文件信息插入到数据库中 -->
+    <select id="insertFileInfo">
+        INSERT INTO files (
+        	id,
+			account,
+			uploadDate,
+			fileName,
+			href,
+			mark
+		)
+		VALUES
+			(
+				?,
+				?,
+				?,
+				?,
+				?,
+				0
+			)
+    </select>
+    
+    <select id='queryFileInfo'>
+		SELECT
+			*
+		FROM
+			files
+		WHERE
+			account = ?
+		AND filename = ?
+		AND filechangename = ?
+    </select>
+    
+    <select id="queryUsers">
+        SELECT
+			account,username
+		FROM
+			users
+    </select>
+    <!-- 某一用户的项目数 -->
+    <select id="getRecords">
+        SELECT
+			COUNT(id) pages
+		FROM
+			files
+		WHERE
+			account = ?
+		AND mark = 0
+    </select>
+    <!-- 查询分页数据，查10条 -->
+    <select id="queryAFileInfo">
+		SELECT
+			id,
+			account,
+			uploadDate,
+			fileName,
+			href
+		FROM
+			(
+				SELECT
+					id,
+					account,
+					uploadDate,
+					fileName,
+					href
+				FROM
+					files
+				WHERE
+					account = ?  AND mark=0
+				ORDER BY
+					uploadDate DESC
+			) mytable
+		LIMIT ?,10
+    </select>
+   <!-- 删除数据，并不是真的删除，修改标记 -->
+    <select id="deleteFile">
+        UPDATE files
+		SET mark = 1
+		WHERE
+			id = ?
+		AND account = ?
+    </select>
+  	<!-- 获得最新数据，即按照时间倒叙排序 -->
+    <select id="getLast">
+        SELECT
+			account,
+			id,
+			href,
+			fileName
+		FROM
+			files
+		WHERE
+			mark = 0
+		ORDER BY
+			uploadDate DESC
+		LIMIT ?,10
+    </select>
+    <!-- 所有项目数 -->
+    <select id="getAllRecord">
+        SELECT
+			COUNT(id) recordCount
+		FROM
+			files
+		WHERE mark = 0
+    </select>
+    <!-- 查询某一用户上传的项目记录总数 -->
+    <select id="getUserRecord">
+        SELECT
+			COUNT(id) recordCount
+		FROM
+			files
+		WHERE account =? AND
+			mark = 0
+    </select>
+<!-- 查看特定用户上传的某一项目,用来判断文件名是否重复 -->
+    <select id="getInfoByfileName">
+        SELECT
+			*
+		FROM
+			files
+		WHERE
+			account = ?
+		AND fileName = ?
+		AND mark = 0
+    </select>
+    
+</namespace>

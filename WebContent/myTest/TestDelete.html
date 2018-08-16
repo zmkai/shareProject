@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>测试删除</title>
+</head>
+<body>
+<div id="mydiv">
+删除<input type="button" value="删除" onclick="del()"/>
+</div>
+
+<script>
+function  del(){
+	var xmlhttp;
+	if(window.XMLHttpRequest){
+		xmlhttp = new XMLHttpRequest();
+	}else{
+		// code for IE6, IE5
+		xmlhttp = new ActiveXobject("Microsoft.XMLHTTP");
+	}
+	
+	xmlhttp.onreadystatechange = function(data) {
+		if(xmlhttp.readyState==4&&xmlhttp.status==200){
+			document.getElementById("mydiv").innerHTML = xmlhttp.responseText;
+			
+			var d = JSON.parse(xmlhttp.responseText);
+			alert(d.code);
+			alert(d.msg);
+			//console.log(d);
+			console.log(data);
+		}
+	}
+	
+	xmlhttp.open("POST","DeleteServlet", true);
+	xmlhttp.setRequestHeader("Content-type", "application/json");
+	xmlhttp.send("account=195140040&id=534c5be");
+}
+
+
+</script>
+</body>
+</html>
